@@ -1,59 +1,211 @@
 package SoloProject;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
-//This is the Menu which will
+// This is the Menu which will
 // be the main page to show all information for Groceries Shop
 public class Menu {
 
-    //Invoice and Item class
-    Invoice invoice;
-    Item item;
+    // Menu attributes (Shop Settings)
+    public String shopName;
+    public List<String> invoiceHeader;
+    public List<Invoice> invoices;
+    public List<Item> items;
 
-
-
-    //Main Menu
-    public void showMenu(){
-        Integer optionNum;
-
-        System.out.println("*** Welcome to Invoicing System on Console system ***"+"\n");
-
-        //1. Shop Settings
-
-        String[] shopSettings = new String[]{"Load Data", "Set Shop Name", "Set Invoice Header","Go Back"}; //1
-        String[] manageShopItems = new String[]{"Add Items","Delete Items","Change Item Price","Report All Items","Go Back"}; //2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // Constructor
+    public Menu(List<String> invoiceHeader, List<Invoice> invoices, List<Item> items) {
+        this.invoiceHeader = new ArrayList<>();
+        this.invoices = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
 
+    // Main Menu
+    public void showMenu() {
+        Scanner inputMain = new Scanner(System.in);
+        Integer optionNumMenu;
 
-    public static void main(String[] args){
+        System.out.println("*** Welcome to Invoicing System on Console system ***\n");
 
-        Menu menu = new Menu();
+        // Application Main Menu
+        System.out.println("Please enter the page number you want to visit:" + "\n"
+                + "1-Shop Settings\n" + "2-Manage Shop Items\n" + "3-Create New Invoice\n" + "4-Report: Statistics\n"
+                + "5-Report: All Invoices\n" + "6-Search Invoices\n" + "7-Program Statistics\n" + "8-Exit");
 
+        optionNumMenu = inputMain.nextInt();
+        inputMain.nextLine(); // consume the newline character
+
+        if (optionNumMenu.equals(1)) {
+            // 1. Shop Settings
+            Integer optionShopSettings;
+            System.out.println("Please enter the page number you want to see\n" + "1.Load Data\n"
+                    + "2.Set Shop Name\n" + "3.Set Invoice Header\n" + "4.Go Back");
+
+            optionShopSettings = inputMain.nextInt();
+            inputMain.nextLine(); // consume the newline character
+
+            if (optionShopSettings.equals(1)) {
+                // Load Data
+                for (Item item : items) {
+                    System.out.println("Items:-");
+                    System.out.println("=========================================================================");
+                    System.out.println("Item id:" + item.getId() + "\n");
+                    System.out.println("Item Name: " + item.getName() + "\n");
+                    System.out.println("Item price for one unit: " + item.getUnitPrice() + "\n");
+                    System.out.println("Item quantity: " + item.getQuantity() + "\n");
+                    System.out.println("The number of quantity Item: " + item.getQuantity() + " the total price: "
+                            + item.getQtyPrice());
+                    System.out.println("=========================================================================");
+                    System.out.println("=========================================================================");
+                }
+                for (Invoice invoice : invoices) {
+                    System.out.println("Invoices:-");
+                    System.out.println("customer full name: " + invoice.fullName + "\n");
+                    System.out.println("Phone number: " + invoice.phoneNumber + "\n");
+                    System.out.println("Invoice date: " + invoice.invoiceDate + "\n");
+                    System.out.println("Total amount: " + invoice.totalAmount + "\n");
+                    System.out.println("Paid Amount: " + invoice.paidAmount + "\n");
+                    System.out.println("Balance: " + invoice.balance + "\n");
+                }
+            } else if (optionShopSettings.equals(2)) {
+                // Set Shop Name
+                System.out.println("Enter the shop name:");
+                shopName = inputMain.nextLine();
+                System.out.println("Shop name: " + shopName + "\n");
+            } else if (optionShopSettings.equals(3)) {
+                // Set Invoice Header
+                System.out.println("Insert Invoice Header in this format(Tel / Fax / Email / Website): ");
+                invoiceHeader.add(inputMain.nextLine());
+            } else if (optionShopSettings.equals(4)) {
+                // Go Back
+                System.out.println("Back to the menu...");
+                showMenu();
+            } else {
+                System.out.println("Please enter only option numbers available (from 1 to 4)");
+            }
+        } else if (optionNumMenu.equals(2)) {
+            // 2. Manage Shop Items
+            Integer optionManageShop;
+            System.out.println("Please enter the page number you want to visit:" + "\n" + "1-Add Items" + "\n" +
+                    "2-Delete Items" + "\n" + "4-Report All Items" + "\n" + "5-Go Back");
+            optionManageShop = inputMain.nextInt();
+            inputMain.nextLine();
+
+            //This for add new Items information
+            if (optionManageShop.equals(1)) {
+                //1.Add Items
+                String newId;
+                String newName;
+                Double newUnitPrice;
+                Integer newQuantity;
+                Double newQtyPrice;
+                System.out.println("Add items:-" + "\n");
+                System.out.println("Add Item id: ");
+                newId = inputMain.nextLine();
+
+                System.out.println("Add Item name: ");
+                newName = inputMain.nextLine();
+
+                System.out.println("Add Item unit price: ");
+                newUnitPrice = inputMain.nextDouble();
+
+                System.out.println("Add Item quantity: ");
+                newQuantity = inputMain.nextInt();
+
+                newQtyPrice = newUnitPrice * newQuantity;  //Hit : quantity price = unitPrice * quantity
+                System.out.println("The Item quantity price = " + Math.round(newQtyPrice));
+
+                Item newItemMenu = new Item(newId, newName, newUnitPrice, newQuantity, newQtyPrice);
+                items.add(newItemMenu);
+                System.out.println("Item id added successfully!");
+
+            } else if (optionManageShop.equals(2)) {
+                //2.Delete Items
+                String yesOrNo;
+                System.out.println("Delete Items:- " + "\n");
+                System.out.println("Do you want to delete items: (enter 'yes' for yes and 'no' for no)");
+                yesOrNo = inputMain.nextLine();
+
+                if (yesOrNo.equals("yes")) {
+                    System.out.println("The Items been deleted");
+                    items.clear();
+
+                } else if (yesOrNo.equals("no")) {
+                    System.out.println("deletion canceled");
+                    showMenu();
+                } else {
+                    System.out.println("Please enter y or n (Characters only accepted)");
+                }
+
+            } else if (optionManageShop.equals(3)) {
+                // Change Item Price
+                Double changePrice;
+                System.out.println("Change Item price:- " + "\n");
+                System.out.println("Please enter new Item price you want: ");
+                changePrice = inputMain.nextDouble();
+                inputMain.nextLine(); // consume the newline character
+
+                // Update the price of each item
+                for (Item item : items) {
+                    item.setUnitPrice(changePrice);
+                }
+                System.out.println("Item prices changed successfully!");
+            } else if (optionManageShop.equals(4)) {
+                //Report All Items
+                System.out.println("Report All Items:- " + "\n");
+                System.out.println("=========================================================================");
+                for (Item item : items) {
+                    System.out.println("Items:-");
+                    System.out.println("=========================================================================");
+                    System.out.println("Item id:" + item.getId() + "\n");
+                    System.out.println("Item Name: " + item.getName() + "\n");
+                    System.out.println("Item price for one unit: " + item.getUnitPrice() + "\n");
+                    System.out.println("Item quantity: " + item.getQuantity() + "\n");
+                    System.out.println("The number of quantity Item: " + item.getQuantity() + " the total price: "
+                            + item.getQtyPrice());
+                }
+
+            } else if (optionManageShop.equals(5)) {
+                //Go Back
+                System.out.println("Back to the menu...");
+                showMenu();
+            } else {
+                System.out.println("Please enter only option numbers available (from 1 to 5)");
+            }
+        } else if (optionNumMenu.equals(3)) {
+            // 3. Create New Invoice
+
+        } else if (optionNumMenu.equals(4)) {
+            //4.Report: Statistics
+
+        } else if (optionNumMenu.equals(5)) {
+            //5.Report: All Invoices
+
+        } else if (optionNumMenu.equals(6)) {
+            //6.Search Invoices
+
+        } else if (optionNumMenu.equals(7)) {
+            //7.Program Statistics
+
+        } else if (optionNumMenu.equals(8)) {
+            //8- Exit
+            String endOrNot;
+            System.out.println("Are you sure you want to exit? ('yes' for yes and 'no' for no)");
+            endOrNot = inputMain.nextLine();
+
+            if (endOrNot.equals("yes")) {
+                System.out.println("The program ends");
+                System.exit(0);
+            } else if (endOrNot.equals("no")) {
+                System.out.println("Back to the Main Menu...");
+                showMenu();
+            } else {
+                System.out.println("Please enter no or yes");
+            }
+        }
     }
 
-
-
-
-
+    public static void main(String[] args) {
+        Menu menu = new Menu(null, null, null);
+        menu.showMenu();
+    }
 }
