@@ -21,6 +21,7 @@ public class Menu {
 
     // Main Menu
     public void showMenu() {
+
         Scanner inputMain = new Scanner(System.in);
         Integer optionNumMenu;
 
@@ -30,6 +31,8 @@ public class Menu {
         System.out.println("Please enter the page number you want to visit:" + "\n"
                 + "1-Shop Settings\n" + "2-Manage Shop Items\n" + "3-Create New Invoice\n" + "4-Report: Statistics\n"
                 + "5-Report: All Invoices\n" + "6-Search Invoices\n" + "7-Program Statistics\n" + "8-Exit");
+
+        System.out.println("Enter here >> ");
 
         optionNumMenu = inputMain.nextInt();
         inputMain.nextLine(); // consume the newline character
@@ -93,30 +96,25 @@ public class Menu {
             //This for add new Items information
             if (optionManageShop.equals(1)) {
                 //1.Add Items
-                String newId;
-                String newName;
-                Double newUnitPrice;
-                Integer newQuantity;
-                Double newQtyPrice;
-                System.out.println("Add items:-" + "\n");
-                System.out.println("Add Item id: ");
-                newId = inputMain.nextLine();
 
-                System.out.println("Add Item name: ");
-                newName = inputMain.nextLine();
+                System.out.println("Add items:- " +"\n");
 
-                System.out.println("Add Item unit price: ");
-                newUnitPrice = inputMain.nextDouble();
+                System.out.println("Add Item id: "+"\n");
+                String newId = inputMain.nextLine();
 
-                System.out.println("Add Item quantity: ");
-                newQuantity = inputMain.nextInt();
+                System.out.println("Add Item name: "+"\n");
+                String newName = inputMain.nextLine();
 
-                newQtyPrice = newUnitPrice * newQuantity;  //Hit : quantity price = unitPrice * quantity
-                System.out.println("The Item quantity price = " + Math.round(newQtyPrice));
+                System.out.println("Add Item unit price: "+"\n");
+                Double newUnitPrice = inputMain.nextDouble();
 
-                Item newItemMenu = new Item(newId, newName, newUnitPrice, newQuantity, newQtyPrice);
-                items.add(newItemMenu);
-                System.out.println("Item id added successfully!");
+                System.out.println("Add Item quantity: "+"\n");
+                Integer newQuantity = inputMain.nextInt();
+
+                Double newQtyPrice = (double) Math.round(newUnitPrice * newQuantity);  //Hit : quantity price = unitPrice * quantity
+
+                items.add(new Item(newId, newName, newUnitPrice, newQuantity, newQtyPrice));
+                System.out.println("All item information been saved...");
 
             } else if (optionManageShop.equals(2)) {
                 //2.Delete Items
@@ -173,13 +171,61 @@ public class Menu {
             }
         } else if (optionNumMenu.equals(3)) {
             // 3. Create New Invoice
+            System.out.println("Please enter new invoice information: "+"\n");
+
+            System.out.println("Enter new full name: "+"\n");
+            String newFullName = inputMain.nextLine();
+
+            System.out.println("Enter new phone number: "+"\n");
+            String newPhoneNumber = inputMain.nextLine();
+
+            System.out.println("Enter new invoice date, format(DD/MM/YYYY):"+"\n");
+            String newInvoiceDate = inputMain.nextLine();
+
+            System.out.println("Enter new Total Amount: "+"\n");
+            Double newTotalAmount = inputMain.nextDouble();
+
+            System.out.println("Enter new Paid Amount: "+"\n");
+            Double newPaidAmount = inputMain.nextDouble();
+
+            System.out.println("Enter new balance: "+"\n");
+            Double newBalance = inputMain.nextDouble();
+
+            invoices.add(new Invoice(newFullName,newPhoneNumber,newInvoiceDate,newTotalAmount,newPaidAmount,newBalance));
+
+            System.out.println("All new invoice information has been saved...");
 
         } else if (optionNumMenu.equals(4)) {
             //4.Report: Statistics
+            Integer countItems = 0; // this for counting how many items are exists in Item table
+
+            for(Integer i = 0; i < items.size() - 1; i++){
+
+                countItems += 1;
+                break;
+            }
+            System.out.println("The number of Items in database: "+countItems+"\n");
+
+            Integer countInvoices = 0; // // this for counting how many invoices are exists in Invoice table
+
+            for(Integer j = 0; j < invoices.size() -1; j++){
+
+                countInvoices += 1;
+                break;
+            }
+            System.out.println("The number of Invoices in database: "+countInvoices+"\n");
+
+            Double allSales = 0.0;
+            for(Invoice invoice : invoices){
+
+                allSales += invoice.totalAmount;
+            }
+            System.out.println("The total sales: "+allSales);
 
         } else if (optionNumMenu.equals(5)) {
             //5.Report: All Invoices
-
+            System.out.println("The report of all invoices: "+"\n");
+            
         } else if (optionNumMenu.equals(6)) {
             //6.Search Invoices
 
@@ -204,7 +250,10 @@ public class Menu {
         }
     }
 
+
+
     public static void main(String[] args) {
+
         Menu menu = new Menu(null, null, null);
         menu.showMenu();
     }
