@@ -5,10 +5,10 @@ package SoloProject;
 // This class represents an item in the inventory
 
 public class Item {
-    private String id;
-    private String name;
-    private Double unitPrice;
-    private Integer quantity;
+    public String id;
+    public String name;
+    public Double unitPrice;
+    public Integer quantity;
 
     // Constructor to initialize an item
     public Item(String id, String name, Double unitPrice, Integer quantity) {

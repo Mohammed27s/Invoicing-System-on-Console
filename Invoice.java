@@ -3,12 +3,12 @@ package SoloProject;
 // This Invoice database
 
 public class Invoice {
-    private String customerName;
-    private String phoneNumber;
-    private String invoiceDate;
-    private Double totalAmount;
-    private Double paidAmount;
-    private Double balance;
+    public String customerName;
+    public String phoneNumber;
+    public String invoiceDate;
+    public Double totalAmount;
+    public Double paidAmount;
+    public Double balance;
 
     public Invoice(String customerName, String phoneNumber, String invoiceDate,
                    Double totalAmount, Double paidAmount) {
@@ -68,7 +68,7 @@ public class Invoice {
         return balance;
     }
 
-    private void updateBalance() {
+    public void updateBalance() {
         this.balance = totalAmount - paidAmount; // This math operation for getting balance
     }
 }
