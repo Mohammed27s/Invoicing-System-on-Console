@@ -1,34 +1,74 @@
 package SoloProject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+// This Invoice database
 
-// This is an invoice class with all information
 public class Invoice {
+    private String customerName;
+    private String phoneNumber;
+    private String invoiceDate;
+    private Double totalAmount;
+    private Double paidAmount;
+    private Double balance;
 
-    public String fullName;
-    public String phoneNumber;
-    public String invoiceDate;
-
-    public Double totalAmount;
-    public Double paidAmount;
-    public Double balance;
-
-    public Invoice(String fullName, String phoneNumber, String invoiceDate,
-                   Double totalAmount, Double paidAmount, Double balance) {
-        this.fullName = fullName;
+    public Invoice(String customerName, String phoneNumber, String invoiceDate,
+                   Double totalAmount, Double paidAmount) {
+        this.customerName = customerName;
         this.phoneNumber = phoneNumber;
         this.invoiceDate = invoiceDate;
         this.totalAmount = totalAmount;
         this.paidAmount = paidAmount;
-        this.balance = balance;
+        this.balance = totalAmount - paidAmount;
     }
 
-    // Getter and setter methods
+    // Getters and setters
 
-    public static void main(String[] args) {
+    public String getCustomerName() {
+        return customerName;
+    }
 
-        Invoice invoice = new Invoice("Mohammed salim","86643342","12/4/2024",12.0,12.0,0.0);
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getInvoiceDate() {
+        return invoiceDate;
+    }
+
+    public void setInvoiceDate(String invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+        updateBalance();
+    }
+
+    public Double getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(Double paidAmount) {
+        this.paidAmount = paidAmount;
+        updateBalance(); // This to show the balance for the customer after getting paying
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    private void updateBalance() {
+        this.balance = totalAmount - paidAmount; // This math operation for getting balance
     }
 }

@@ -1,30 +1,24 @@
 package SoloProject;
 
+//This is Item class
 
-import java.util.Scanner;
+// This class represents an item in the inventory
 
-//This class has all the information about item
 public class Item {
+    private String id;
+    private String name;
+    private Double unitPrice;
+    private Integer quantity;
 
-    public String id;
-    public String name;
-    public Double unitPrice;
-    public Integer quantity;
-    public Double qtyPrice;
-
-
-
-
-    public Item(String id, String name, Double unitPrice, Integer quantity, Double qtyPrice) {
+    // Constructor to initialize an item
+    public Item(String id, String name, Double unitPrice, Integer quantity) {
         this.id = id;
         this.name = name;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
-        this.qtyPrice = qtyPrice;
     }
 
-
-
+    // Getter and setter methods
 
     public String getId() {
         return id;
@@ -58,45 +52,13 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public Double getQtyPrice() {
-        return qtyPrice;
+    // Method to calculate total price of the item
+    public Double getTotalPrice() {
+        return unitPrice * quantity; //This math operation for getting the total price per quantity
     }
 
-    public void setQtyPrice(Double qtyPrice) {
-        this.qtyPrice = qtyPrice;
+    // Main method for testing
+    public static void main(String[] args) {
+        // You can add test cases or use this method for testing
     }
-
-    public static void main(String[] args){
-
-        Scanner inputItem = new Scanner(System.in); //insert customer item information
-
-        Item item = new Item("325655s1","phone",50.99,5, 254.95);
-        //getting values
-        System.out.println("Item id: "+item.getId()+"\n");
-        System.out.println("Item name: "+item.getId()+"\n");
-        System.out.println("Item unit price: "+item.getUnitPrice()+"\n");
-        System.out.println("Item quantity: "+item.getId()+"\n");
-        System.out.println("Item quantity price: "+item.getQtyPrice());
-
-        //setting values
-        System.out.println("Add Item id: ");
-        item.setId("45354664s223");
-		System.out.println("\n");
-        System.out.println("Add Item name: ");
-        item.setName("Car");
-	    System.out.println("\n");
-        System.out.println("Add Item unit price: ");
-        item.setUnitPrice(20000.1);
-		System.out.println("\n");
-        System.out.println("Add Item quantity: ");
-        item.setQuantity(1);
-	    System.out.println("\n");
-        System.out.println("Add quantity price: ");
-        item.setQtyPrice(20000.1);
-
-
-
-
-    }
-
 }
