@@ -4,18 +4,23 @@ package SoloProject;
 
 // This class represents an item in the inventory
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
     public String id;
     public String name;
     public Double unitPrice;
     public Integer quantity;
+    private Integer invoiceNoItem;
+
 
     // Constructor to initialize an item
-    public Item(String id, String name, Double unitPrice, Integer quantity) {
+    public Item(String id, String name, Double unitPrice, Integer quantity, Integer invoiceNoItem) {
         this.id = id;
         this.name = name;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
+        this.invoiceNoItem = invoiceNoItem;
     }
 
     // Getter and setter methods
@@ -54,8 +59,18 @@ public class Item {
 
     // Method to calculate total price of the item
     public Double getTotalPrice() {
-        return unitPrice * quantity; //This math operation for getting the total price per quantity
+        return (double) Math.round(unitPrice * quantity); //This math operation for getting the total price per quantity
     }
+
+    public Integer getInvoiceNoItem() {
+        return invoiceNoItem != null ? invoiceNoItem : 0;
+    }
+
+    public void setInvoiceNo(Integer invoiceNoItem) {
+        this.invoiceNoItem = invoiceNoItem;
+    }
+
+
 
     // Main method for testing
     public static void main(String[] args) {
