@@ -3,7 +3,7 @@ package SoloProject;
 import java.util.HashMap;
 import java.util.Map;
 
-//This is Program Statistics Class 
+//This is Program Statistics Class
 public class ProgramStatistics {
     // Field to store the counts of each menu option
     private final Map<Integer, Integer> menuOptionCounts;

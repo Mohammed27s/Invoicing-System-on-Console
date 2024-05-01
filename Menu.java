@@ -1,19 +1,22 @@
 package SoloProject;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 // This is the Menu which will
 // be the main page to show all information for Groceries Shop
+
 public class Menu {
     public Integer newInvoiceNo; // i used this to make Invoice No available for Items list
-
     public Scanner inputMain = new Scanner(System.in); //This is for back to Menu before going further
     public Scanner backToTheMainMenu = new Scanner(System.in); //This is for back to menu after create data in option
 
     // Menu attributes (Shop Settings)
 
-    private static List<String> shopName; //This for storing the shop name
+    private static Stack<String> shopName; //This for storing the shop name
     private static List<String> invoiceHeader; //This is for storing the invoice header
     private static List<Invoice> invoices; // This is for storing  all invoices
     private static List<Item> items; // This is for storing all items
@@ -24,8 +27,8 @@ public class Menu {
     // Menu Constructor
     public Menu() {
 
-        shopName = new ArrayList<>();
-        invoiceHeader = new ArrayList<>();
+        shopName = new Stack<>();
+        invoiceHeader = new ArrayList<>(); //This isn't load the saved data in it
         invoices = new ArrayList<>();
         items = new ArrayList<>();
         programStatistics = new ProgramStatistics();
@@ -66,7 +69,6 @@ public class Menu {
     }
 
 
-
     // Main Menu
     public void showMenu() {
 
@@ -101,7 +103,7 @@ public class Menu {
                 // Load Data
                 for (Item item : items) {
 
-                    System.out.println("Items:-");
+                    System.out.println("Items:-"+"\n");
                     System.out.println("=========================================================================");
                     System.out.println("Item id:" + item.getId() + "\n");
                     System.out.println("Item Name: " + item.getName() + "\n");
@@ -115,7 +117,7 @@ public class Menu {
                 }
 
                 for (Invoice invoice : invoices) {
-                    System.out.println("Invoices:-");
+                    System.out.println("Invoices:-"+"\n");
                     System.out.println("Invoice No: " + invoice.getInvoiceNo() + "\n");
                     System.out.println("customer full name: " + invoice.getCustomerName() + "\n");
                     System.out.println("Phone number: " + invoice.getPhoneNumber() + "\n");
@@ -138,37 +140,98 @@ public class Menu {
 
 
             } else if (optionShopSettings.equals(2)) {
-                // Set Shop Name
-                System.out.println("Enter the shop name:");
-                shopName.add(inputMain.nextLine());
-                System.out.println("Shop name: " + shopName + "\n");
+                //Set Shop Name
+                // Also This Shop Name Using Input validation
+                String storeNames; // This is for storing names in shopName Stack
 
-                String yesOrNoMainMenu;
-                System.out.println("Do you want to back to the main menu ? Hint:(answer with yes)");
-                yesOrNoMainMenu = backToTheMainMenu.nextLine();
-                if(yesOrNoMainMenu.equals("yes")){
-                    System.out.println("loading... ");
+                System.out.println("Enter the shop name:");
+                storeNames = inputMain.nextLine();
+
+                if (storeNames.matches("[a-zA-Z\\s]+")) {
+                    System.out.println("Your new Shop Name has been added successfully...\n");
+                    shopName.add(storeNames);
+
+                    // This is for getting back to the Main Menu
+                    String yesOrNoMainMenu;
+                    System.out.println("Do you want to back to the main menu ? Hint:(answer with yes)");
+                    yesOrNoMainMenu = backToTheMainMenu.nextLine();
+                    if (yesOrNoMainMenu.equals("yes")) {
+                        System.out.println("loading... ");
+                        try {
+                            // Pause execution for 3 seconds
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        showMenu();
+                    } else {
+                        System.out.println("Enter yes or no Hint:(Numbers, and other words are not accepted");
+                        showMenu();
+                    }
+                } else if (storeNames.isEmpty()) {
+                    System.out.println("The Shop Name input filed must not be empty");
+                    try {
+                        // Pause execution for 3 seconds
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     showMenu();
-                }
-                else {
-                    System.out.println("Enter yes or no Hint:(Numbers, and other words are not accepted");
+                } else {
+                    System.out.println("Numbers, Symbols and any Other character non letters are not accepted");
+                    try {
+                        // Pause execution for 4 seconds
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    showMenu();
                 }
 
             } else if (optionShopSettings.equals(3)) {
                 // Set Invoice Header
-                System.out.println("Insert Invoice Header in this format (Tel / Fax / Email / Website):"+"\n"+
-                        "Hint: format example: (+968 76756523/ 665656563/ example.admin@outlook.com/ www.exampleWeb.com)");
-                invoiceHeader.add(inputMain.nextLine());
+                String headerInput; // This is for storing the input in invoiceHeader Stack
 
-                String yesOrNoMainMenu;
-                System.out.println("Do you want to back to the main menu ? Hint:(answer with yes)");
-                yesOrNoMainMenu = backToTheMainMenu.nextLine();
-                if(yesOrNoMainMenu.equals("yes")){
-                    System.out.println("loading... ");
+                System.out.println("Insert Invoice Header in this format (Tel / Fax / Email / Website):");
+                System.out.println("Hint: format example: (+123 456789 / +123 987654 / example@email.com / www.example.com)");
+
+                // Get the input from the user
+                headerInput = inputMain.nextLine();
+
+                if (headerInput.matches("^\\s*\\+?\\d+\\s*/\\s*\\+?\\d+\\s*/\\s*\\S+@\\S+\\.\\S+\\s*/\\s*www\\.[\\S]+\\.[\\S]+\\s*$")) {
+                    System.out.println("Invoice Header added successfully...\n");
+                    invoiceHeader.add(headerInput);
+
+                    // Ask if the user wants to go back to the main menu
+                    String yesOrNoMainMenu;
+                    System.out.println("Do you want to go back to the main menu? (Answer with 'yes')");
+                    yesOrNoMainMenu = backToTheMainMenu.nextLine();
+                    if (yesOrNoMainMenu.equals("yes")) {
+                        System.out.println("Loading... ");
+                        showMenu();
+                    } else {
+                        System.out.println("Enter 'yes' to go back to the main menu. Hint: (Numbers and other words are not accepted)");
+                    }
+                }
+                else if (headerInput.isEmpty()) {
+                    System.out.println("The Invoice Header input filed must not be empty");
+                    try {
+                        // Pause execution for 3 seconds
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     showMenu();
                 }
                 else {
-                    System.out.println("Enter yes or no Hint:(Numbers, and other words are not accepted");
+                    System.out.println("Invalid input format for the Invoice Header.");
+                    try {
+                        // Pause execution for 4 seconds
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    showMenu();
                 }
 
             } else if (optionShopSettings.equals(4)) {
@@ -192,27 +255,96 @@ public class Menu {
             if (optionManageShop.equals(1)) {
                 //1.Add Items
 
-                System.out.println("Add items:- " + "\n");
+                // Input validation for ID
+                String newId = null;
+                while (true) {
+                    try {
+                        System.out.print("Add Item ID (9 digits): ");
+                        newId = inputMain.nextLine();
 
-                System.out.println("Add Item id: " + "\n");
-                String newId = inputMain.nextLine();
-                System.out.println("The new item id: " + newId + "\n");
+                        // Validate ID number format using regular expression
+                        if (!newId.matches("\\d{9}")) {
+                            throw new IllegalArgumentException("ID number must be a 9-digit number.");
+                        }
 
-                System.out.println("Add Item name: " + "\n");
-                String newName = inputMain.nextLine();
-                System.out.println("The new item name: " + newName + "\n");
+                        // If input is valid, break out of the loop
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
 
-                System.out.println("Add Item unit price: " + "\n");
-                Double newUnitPrice = inputMain.nextDouble();
-                System.out.println("The new item unit price: " + "$" + newUnitPrice + "\n");
+                // Input validation for name
+                String newName = null;
+                while (true) {
+                    try {
+                        System.out.print("Add Item name: (Hint: The name must only have letters): ");
+                        newName = inputMain.nextLine();
 
-                System.out.println("Add Item quantity: " + "\n");
-                Integer newQuantity = inputMain.nextInt();
-                System.out.println("The new item quantity: " + newQuantity + "\n");
+                        // Check if the input contains any digits
+                        if (newName.matches(".*\\d.*")) {
+                            throw new IllegalArgumentException("Name cannot contain numbers.");
+                        }
+
+                        // Validate name: For simplicity, let's assume the name should not be empty
+                        if (newName.trim().isEmpty()) {
+                            throw new IllegalArgumentException("Name cannot be empty.");
+                        }
+
+                        // If input is valid, break out of the loop
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
+                // Input validation for unit price
+                Double newUnitPrice = 0.0;
+                while (true) {
+                    try {
+                        System.out.print("Add Item unit price: ");
+                        newUnitPrice = inputMain.nextDouble();
+
+                        // Validate unit price: Should be positive
+                        if (newUnitPrice <= 0) {
+                            throw new IllegalArgumentException("Unit price must be a positive number.");
+                        }
+
+                        // If input is valid, break out of the loop
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    } finally {
+                        // Consume the newline character after reading the double value
+                        inputMain.nextLine();
+                    }
+                }
+
+                // Input validation for quantity
+                Integer newQuantity = 0;
+                while (true) {
+                    try {
+                        System.out.print("Add Item quantity: ");
+                        newQuantity = inputMain.nextInt();
+
+                        // Validate quantity: Should be positive
+                        if (newQuantity <= 0) {
+                            throw new IllegalArgumentException("Quantity must be a positive integer.");
+                        }
+
+                        // If input is valid, break out of the loop
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+                    } finally {
+                        // Consume the newline character after reading the integer value
+                        inputMain.nextLine();
+                    }
+                }
 
                 Item newInputItem = new Item(newId, newName, newUnitPrice, newQuantity, newInvoiceNo);
                 items.add(newInputItem);
-                System.out.println("Number of items in the list: " + items.size());
+
 
                 //This is to get the total price
                 System.out.println("The total quantity price = " + "$" + newInputItem.getTotalPrice() + "\n");
@@ -261,17 +393,32 @@ public class Menu {
 
             } else if (optionManageShop.equals(3)) {
                 // Change Item Price
-                Double changePrice;
-                System.out.println("Change Item Price:- " + "\n");
-                System.out.println("Please enter new Item price you want: ");
-                changePrice = inputMain.nextDouble();
-                inputMain.nextLine(); // consume the newline character
+                // Input validation for new item price
+                Double changePrice = null;
+                while (true) {
+                    try {
+                        System.out.println("Change Item Price:- ");
+                        System.out.println("Please enter the new Item price: ");
+                        String priceInput = inputMain.nextLine();
+
+                        // Try parsing the input string as a Double
+                        changePrice = Double.parseDouble(priceInput);
+
+                        // If parsing is successful, break out of the loop
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid numeric price.");
+                    }
+                }
 
                 // Update the price of each item
                 for (Item item : items) {
                     item.setUnitPrice(changePrice);
                 }
-                System.out.println("Item Price changed successfully!");
+
+                System.out.println("Item Price changed successfully!"+"\n");
+
+
 
                 String yesOrNoMainMenu;
                 System.out.println("Do you want to back to the main menu ? Hint:(answer with yes)");
@@ -321,35 +468,138 @@ public class Menu {
             // 3. Create New Invoice
             System.out.println("Please enter new invoice information: " + "\n");
 
-            System.out.println("Enter Invoice No: " + "\n");
-            Integer newInvoiceNo = inputMain.nextInt();
-            inputMain.nextLine(); // Consume the newline character
-            System.out.println("The new Invoice No: " + newInvoiceNo + "\n");
+            // Input validation for Invoice No
+            Integer newInvoiceNo = 0;
+            while (true) {
+                try {
+                    System.out.print("Enter Invoice No: ");
+                    String invoiceNoInput = inputMain.nextLine();
 
-            System.out.println("Enter new customer full name: " + "\n");
-            String newCustomerFullName = inputMain.nextLine();
-            System.out.println("The new customer full name: " + newCustomerFullName + "\n");
+                    // Check if the input contains any non-numeric characters
+                    if (!invoiceNoInput.matches("\\d+")) {
+                        throw new IllegalArgumentException("Invalid input. Invoice No must contain only digits.");
+                    }
 
-            System.out.println("Enter new phone number: " + "\n");
-            Integer newPhoneNumber = inputMain.nextInt();
-            inputMain.nextLine(); // Consume the newline character
-            System.out.println("The new phone number: " + newPhoneNumber + "\n");
+                    // Parse the input string as an integer
+                    newInvoiceNo = Integer.parseInt(invoiceNoInput);
 
-            System.out.println("Enter new invoice date, format(DD/MM/YYYY):" + "\n");
-            String newInvoiceDate = inputMain.nextLine();
-            System.out.println("The new invoice date: " + newInvoiceDate + "\n");
+                    // Validate Invoice No: Should be positive
+                    if (newInvoiceNo <= 0) {
+                        throw new IllegalArgumentException("Invoice No must be a positive integer.");
+                    }
 
-            System.out.println("Enter new Total Amount: " + "\n");
-            Double newTotalAmount = inputMain.nextDouble();
-            System.out.println("The new total amount: " + "$" + newTotalAmount + "\n");
+                    // If input is valid, break out of the loop
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid numeric Invoice No.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
 
-            System.out.println("Enter new Paid Amount: " + "\n");
-            Double newPaidAmount = inputMain.nextDouble();
-            System.out.println("The new paid amount: " + "$" + newPaidAmount + "\n");
+            // Input validation for customer full name
+            String newCustomerFullName = null;
+            while (true) {
+                try {
+                    System.out.print("Enter new customer full name: ");
+                    newCustomerFullName = inputMain.nextLine();
+
+                    // Check if the input contains any digits or symbols
+                    if (newCustomerFullName.matches(".*\\d.*") || !newCustomerFullName.matches("[a-zA-Z\\s]+")) {
+                        throw new IllegalArgumentException("Invalid input. Customer full name must contain only letters and spaces.");
+                    }
+
+                    // Validate customer full name: Should not be empty
+                    if (newCustomerFullName.trim().isEmpty()) {
+                        throw new IllegalArgumentException("Customer full name cannot be empty.");
+                    }
+
+                    // If input is valid, break out of the loop
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            // Input validation for phone number
+            Long newPhoneNumber;
+            while (true) {
+                try {
+                    System.out.print("Enter new phone number: ");
+                    newPhoneNumber = Long.parseLong(inputMain.nextLine());
+
+                    // Validate phone number: Should have 10 digits
+                    if (String.valueOf(newPhoneNumber).length() != 10) {
+                        throw new IllegalArgumentException("Phone number must be a 10-digit number.");
+                    }
+
+                    // If input is valid, break out of the loop
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid input. Please enter a valid 10-digit phone number.");
+                }
+            }
+
+            // Input validation for invoice date
+            // Input validation for invoice date
+            String newInvoiceDate = null;
+            while (true) {
+                try {
+                    System.out.print("Enter new invoice date, format (DD/MM/YYYY): ");
+                    newInvoiceDate = inputMain.nextLine();
+
+                    // Parse the input string as a LocalDate with the specified format
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDate.parse(newInvoiceDate, formatter);
+
+                    // If input is valid, break out of the loop
+                    break;
+                } catch (DateTimeParseException e) {
+                    System.out.println("Invalid input. Please enter the date in the format DD/MM/YYYY.");
+                }
+            }
+
+            // Input validation for total amount
+            Double newTotalAmount = 0.0;
+            while (true) {
+                try {
+                    System.out.print("Enter new Total Amount: ");
+                    newTotalAmount = Double.parseDouble(inputMain.nextLine());
+
+                    // Validate total amount: Should be positive
+                    if (newTotalAmount <= 0) {
+                        throw new IllegalArgumentException("Total Amount must be a positive number.");
+                    }
+
+                    // If input is valid, break out of the loop
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid input. Please enter a valid positive number.");
+                }
+            }
+
+            // Input validation for paid amount
+            Double newPaidAmount = 0.0;
+            while (true) {
+                try {
+                    System.out.print("Enter new Paid Amount: ");
+                    newPaidAmount = Double.parseDouble(inputMain.nextLine());
+
+                    // Validate paid amount: Should be positive
+                    if (newPaidAmount < 0) {
+                        throw new IllegalArgumentException("Paid Amount cannot be negative.");
+                    }
+
+                    // If input is valid, break out of the loop
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                }
+            }
 
             // The balance isn't included here because we get it like this: balance = (totalAmount - paidAmount)
 
-            Invoice newInputInvoice = new Invoice(newInvoiceNo, newCustomerFullName, newPhoneNumber, newInvoiceDate, newTotalAmount, newPaidAmount);
+            Invoice newInputInvoice = new Invoice(newInvoiceNo, newCustomerFullName, Math.toIntExact(newPhoneNumber), newInvoiceDate, newTotalAmount, newPaidAmount);
             invoices.add(newInputInvoice); // Adding all invoice information in invoices list
 
             System.out.println("The balance: " + "$" + newInputInvoice.getBalance() + "\n");
@@ -442,35 +692,61 @@ public class Menu {
 
         } else if (optionNumMenu.equals(6)) {
             //6.Search Invoices
-            System.out.println("Search Invoices: \n");
-            System.out.println("Enter the Invoice Number you want to search for:");
-            Integer searchInvoiceNo = inputMain.nextInt();
+            // Input validation for search invoice number
+            Integer searchInvoiceNo = 0;
+            while (true) {
+                try {
+                    System.out.println("Search Invoices:");
+                    System.out.println("Enter the Invoice Number you want to search for:");
+                    String searchInvoiceNoInput = inputMain.nextLine();
 
-            // Display items associated with this invoice
+                    // Parse the input string as an integer
+                    searchInvoiceNo = Integer.parseInt(searchInvoiceNoInput);
+
+                    // Validate search invoice number: Should be positive
+                    if (searchInvoiceNo <= 0) {
+                        throw new IllegalArgumentException("Invoice Number must be a positive integer.");
+                    }
+
+                    // If input is valid, break out of the loop
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid numeric Invoice Number.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            // Proceed with searching invoices
+            // Display items associated with the search invoice number
+            Boolean found = false;
             for (Invoice invoice : invoices) {
                 for (Item item : items) {
                     if (invoice.getInvoiceNo().equals(searchInvoiceNo) && item.getInvoiceNoItem().equals(searchInvoiceNo)) {
-                        System.out.println("Invoice No: " + invoice.getInvoiceNo() + "\n");
-                        System.out.println("Customer Name: " + invoice.getCustomerName() + "\n");
-                        System.out.println("Phone Number: " + invoice.getPhoneNumber() + "\n");
-                        System.out.println("Invoice Date: " + invoice.getInvoiceDate() + "\n");
-                        System.out.println("Total Amount: " + "$" + invoice.getTotalAmount() + "\n");
-                        System.out.println("Paid Amount: " + "$" + invoice.getPaidAmount());
-                        System.out.println("Balance: " + "$" + invoice.getBalance() + "\n");
+                        // Display invoice and item details
+                        System.out.println("Invoice No: " + invoice.getInvoiceNo());
+                        System.out.println("Customer Name: " + invoice.getCustomerName());
+                        System.out.println("Phone Number: " + invoice.getPhoneNumber());
+                        System.out.println("Invoice Date: " + invoice.getInvoiceDate());
+                        System.out.println("Total Amount: $" + invoice.getTotalAmount());
+                        System.out.println("Paid Amount: $" + invoice.getPaidAmount());
+                        System.out.println("Balance: $" + invoice.getBalance());
 
-                        System.out.println("Items:" + "\n");
-
+                        System.out.println("Items:");
                         System.out.println("Item Id: " + item.getId());
                         System.out.println("Item Name: " + item.getName());
                         System.out.println("Item Unit Price: $" + item.getUnitPrice());
                         System.out.println("Item Quantity: " + item.getQuantity());
-                        System.out.println("Item Total Price: $" + item.getTotalPrice() + "\n");
+                        System.out.println("Item Total Price: $" + item.getTotalPrice());
 
-                    } else {
-                        System.out.println("The Invoice number not found.");
+                        found = true;
+                        break;
                     }
-
                 }
+            }
+
+            if (!found) {
+                System.out.println("Invoice number not found.");
             }
 
             String yesOrNoMainMenu;

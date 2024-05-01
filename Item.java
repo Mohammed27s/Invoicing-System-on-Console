@@ -5,6 +5,7 @@ package SoloProject;
 // This class represents an item in the inventory
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Item implements Serializable {
     public String id;
@@ -12,7 +13,7 @@ public class Item implements Serializable {
     public Double unitPrice;
     public Integer quantity;
     private Integer invoiceNoItem;
-
+    private static List<Invoice> invoicesItem; //This is for getting the Invoice No
 
     // Constructor to initialize an item
     public Item(String id, String name, Double unitPrice, Integer quantity, Integer invoiceNoItem) {
@@ -63,7 +64,20 @@ public class Item implements Serializable {
     }
 
     public Integer getInvoiceNoItem() {
-        return invoiceNoItem != null ? invoiceNoItem : 0;
+
+       return invoiceNoItem != null ? invoiceNoItem : 0;
+
+       // Integer matchInvoiceNoItem = 0;
+        /*for(Invoice invoiceNoItem: invoicesItem){
+
+            matchInvoiceNoItem = invoiceNoItem.invoiceNo;
+
+            System.out.println("The invoice number: ");
+        }
+
+        return matchInvoiceNoItem;
+
+         */
     }
 
     public void setInvoiceNo(Integer invoiceNoItem) {
@@ -75,5 +89,6 @@ public class Item implements Serializable {
     // Main method for testing
     public static void main(String[] args) {
         // You can add test cases or use this method for testing
+
     }
 }
